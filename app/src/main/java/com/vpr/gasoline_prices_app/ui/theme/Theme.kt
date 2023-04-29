@@ -1,4 +1,4 @@
-package com.example.gasoline_prices_app.ui.theme
+package com.vpr.gasoline_prices_app.ui.theme
 
 import android.app.Activity
 import android.os.Build

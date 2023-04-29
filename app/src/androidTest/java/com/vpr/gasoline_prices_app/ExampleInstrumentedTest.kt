@@ -1,4 +1,4 @@
-package com.example.gasoline_prices_app
+package com.vpr.gasoline_prices_app
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

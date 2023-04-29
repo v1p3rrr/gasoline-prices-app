@@ -1,4 +1,4 @@
-package com.example.gasoline_prices_app.ui.theme
+package com.vpr.gasoline_prices_app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
