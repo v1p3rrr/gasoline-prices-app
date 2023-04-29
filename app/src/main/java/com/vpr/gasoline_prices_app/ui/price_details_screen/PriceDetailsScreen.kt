@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,11 +21,12 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PriceDetailsScreen() {
-    Scaffold() { padding ->
+fun PriceDetailsScreen(snackBarHostState: SnackbarHostState) {
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
+        content = { padding ->
         Surface(modifier = Modifier.padding(padding)) {
             Column() {
-// Заголовок
                 Row(Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
                     Text(modifier = Modifier.width(120.dp).padding(start = 16.dp), text = "")
                     Text(
@@ -36,7 +40,6 @@ fun PriceDetailsScreen() {
                         text = "15.12.2021"
                     )
                 }
-// Строки со значениями
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                     Text(modifier = Modifier.width(120.dp).padding(start = 16.dp), text = "А-92")
                     Text(
@@ -104,11 +107,12 @@ fun PriceDetailsScreen() {
                 }
             }
         }
-    }
+    })
 }
 
 @Preview
 @Composable
-fun PreviewScreen() {
-    PriceDetailsScreen()
+fun PreviewPriceDetailsScreen() {
+    val snackBarHostState = remember { SnackbarHostState() }
+    PriceDetailsScreen(snackBarHostState)
 }

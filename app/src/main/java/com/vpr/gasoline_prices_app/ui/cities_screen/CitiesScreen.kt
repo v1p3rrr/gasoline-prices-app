@@ -7,51 +7,57 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CitiesScreen() {
+fun CitiesScreen(navController: NavController, snackBarHostState: androidx.compose.material3.SnackbarHostState) {
     val cities = listOf("New York", "London", "Paris", "Sydney", "Tokyo")
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-    ){
-
-        Text(
-            text = "Города:",
-            fontSize = 32.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(cities) { city ->
-                Text(
-                    text = city,
-                    fontSize = 18.sp,
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
+        content = { padding ->
+            Surface(modifier = Modifier.padding(padding)) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 8.dp),
-                    textAlign = TextAlign.Center
-                )
+                        .fillMaxSize()
+                        .background(Color.White)
+                ) {
+
+                    Text(
+                        text = "Города:",
+                        fontSize = 32.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(cities) { city ->
+                            Text(
+                                text = city,
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 8.dp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewScreen() {
-    CitiesScreen()
+        })
 }

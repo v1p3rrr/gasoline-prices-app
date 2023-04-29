@@ -43,8 +43,9 @@ import com.example.gasoline_prices_app.R
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PricesScreen(snackbarHostState: SnackbarHostState) {
+fun PricesScreen(snackBarHostState: SnackbarHostState) {
     Scaffold(
+        snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             androidx.compose.material.TopAppBar(
                 modifier = Modifier
@@ -65,7 +66,7 @@ fun PricesScreen(snackbarHostState: SnackbarHostState) {
                 }
             )
         },
-     content = {padding ->
+     content = { padding ->
          Surface(
             modifier = Modifier
                 .padding(padding)
@@ -128,9 +129,9 @@ fun PricesScreen(snackbarHostState: SnackbarHostState) {
 }
 
 
-@Preview(showBackground = false)
+@Preview
 @Composable
-fun PreviewScreen() {
-    val snackbarHostState = remember { SnackbarHostState() }
-    PricesScreen(snackbarHostState)
+fun PreviewPricesScreen() {
+    val snackBarHostState = remember { SnackbarHostState() }
+    PricesScreen(snackBarHostState)
 }
