@@ -19,4 +19,11 @@ interface GasolinePricesService {
         @Query("city") city: String,
         @Query("date") date: String
     ): CityWithPriceListDTO
+
+    @GET("./price")
+    suspend fun getPricesListByCityAndDateRange(
+        @Query("city") city: String,
+        @Query("dateStart") dateStart: String,
+        @Query("dateEnd") dateEnd: String
+    ): CityWithPriceListDTO
 }

@@ -6,7 +6,8 @@ import com.vpr.gasoline_prices_app.domain.model.GasolinePrice
 
 @Entity(tableName = "gasoline_price")
 data class GasolinePriceEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    val id: Long? = null,
     val gasolineType: String,
     val price: Long,
     val currency: String,
