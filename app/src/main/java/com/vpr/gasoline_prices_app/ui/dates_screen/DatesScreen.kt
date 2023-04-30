@@ -100,6 +100,8 @@ fun DatesScreen(
     val selectedMonth = remember { mutableStateOf("") }
     var selectedYear by remember { mutableStateOf("") }
     val yearList = createYearList()
+    val selectedDate = remember { mutableStateOf("") }
+    Log.d("MyTag", selectedDate.value)
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -151,6 +153,12 @@ fun DatesScreen(
                                     set(Calendar.MONTH, month)
                                     set(Calendar.DAY_OF_MONTH, day)
                                 }
+
+                                val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                                selectedDate.value = dateFormat.format(calendar.time)
+                                Log.d("MyTAG", dateFormat.format(calendar.time))
+
+
                                 val monthName = SimpleDateFormat("LLLL", Locale.getDefault()).format(calendar.time)
                                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
 
@@ -208,8 +216,13 @@ fun DatesScreen(
                             .align(Alignment.CenterHorizontally)
                     )
 
+                    val currentDate = Calendar.getInstance()
+                    currentDate.add(Calendar.MONTH, -6)
+                    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                    val formattedDate = dateFormat.format(currentDate.time)
+
                     Text(
-                        text = "12.12.2005"
+                        text = formattedDate
                     )
                 }
 
@@ -229,8 +242,12 @@ fun DatesScreen(
                             })
                             .align(Alignment.CenterHorizontally)
                     )
+                    val currentDate = remember { Calendar.getInstance().time }
+                    val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+                    val formattedDate = dateFormat.format(currentDate)
+
                     Text(
-                        text = "25.05.2023"
+                        text = formattedDate
                     )
                 }
             }
@@ -240,7 +257,7 @@ fun DatesScreen(
             ) {
                 items(30) { index ->
                     Text(
-                        text = "Дата $index",
+                        text = "Дата ${selectedDate.value}",
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .clickable {

@@ -1,6 +1,5 @@
 package com.vpr.gasoline_prices_app.ui.cities_screen
 
-import android.os.Bundle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.navArgument
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,9 +51,7 @@ fun CitiesScreen(navController: NavController, snackBarHostState: SnackbarHostSt
                                 fontSize = 18.sp,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
-                                        navController.navigate("dates")
-                                    }
+                                    .clickable { navController.navigate("dates")}
                                     .padding(horizontal = 8.dp, vertical = 8.dp),
                                 textAlign = TextAlign.Center
                             )
