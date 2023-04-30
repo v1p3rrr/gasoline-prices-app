@@ -20,10 +20,10 @@ class GasolinePriceRepositoryImpl @Inject constructor(
     private val api: GasolinePricesService,
     private val dao: GasolinePriceDao
 ) : GasolinePriceRepository {
-    override suspend fun getGasolinePriceByCityAndDate(city: String, date: String): Flow<Resource<GasolinePrice>> = flow {
+    override suspend fun getGasolinePriceByCityAndDate(city: String, date: String): Flow<Resource<List<GasolinePrice>>> = flow {
         emit(Resource.Loading())
 
-        val localGasolinePrice : GasolinePrice? = dao.getGasolinePriceByCityAndDate(city = city, date = date)?.toGasolinePrice()
+        val localGasolinePrice : List<GasolinePrice> = dao.getGasolinePriceByCityAndDate(city = city, date = date).map { it.toGasolinePrice() }
 
         emit(Resource.Loading(localGasolinePrice))
 
@@ -49,7 +49,7 @@ class GasolinePriceRepositoryImpl @Inject constructor(
             ))
         }
 
-        val newLocalGasolinePrice: GasolinePrice? = dao.getGasolinePriceByCityAndDate(city = city, date = date)?.toGasolinePrice()
+        val newLocalGasolinePrice: List<GasolinePrice> = dao.getGasolinePriceByCityAndDate(city = city, date = date).map { it.toGasolinePrice() }
         emit(Resource.Success(newLocalGasolinePrice))
     }.catch {e ->
         emit(Resource.Error("Something went wrong"))
@@ -85,7 +85,7 @@ override suspend fun getGasolinePricesListByCityAndDateRange(city: String, dateS
             ))
         }
 
-        val newLocalGasolinePrice : List<GasolinePrice> = dao.getGasolinePricesByCityAndDateRange(city = city, dateStart = dateStart, dateEnd = dateEnd).map{ it -> it.toGasolinePrice()}
+        val newLocalGasolinePrice : List<GasolinePrice> = dao.getGasolinePricesByCityAndDateRange(city = city, dateStart = dateStart, dateEnd = dateEnd).map { it -> it.toGasolinePrice()}
         emit(Resource.Success(newLocalGasolinePrice))
     }.catch {e ->
         emit(Resource.Error("Something went wrong"))

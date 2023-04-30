@@ -70,6 +70,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavController
 import com.example.gasoline_prices_app.R
@@ -83,6 +84,10 @@ fun DatesScreen(
     navController: NavController,
     snackBarHostState: SnackbarHostState
 ) {
+    val viewModel: DatesViewModel = viewModel()
+    val datesState = viewModel.datesState.value
+
+
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
