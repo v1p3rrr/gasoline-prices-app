@@ -10,9 +10,9 @@ interface GasolinePricesService {
     @GET("./cities")
     suspend fun getCitiesList(): List<String>
 
-    @GET("./price")
+    @GET("./price/{city}")
     suspend fun getPriceByCity(
-        @Query("city") city: String
+        @Path("city") city: String
     ): CityWithPriceListDTO
 
     @GET("./price/{city}/date/{date}")

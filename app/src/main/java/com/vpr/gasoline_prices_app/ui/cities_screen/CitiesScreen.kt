@@ -1,5 +1,6 @@
 package com.vpr.gasoline_prices_app.ui.cities_screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -15,17 +16,24 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.vpr.gasoline_prices_app.ui.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CitiesScreen(navController: NavController, snackBarHostState: SnackbarHostState) {
-    val cities = listOf("New York", "London", "Paris", "Sydney", "Tokyo")
+    val viewModel: CitiesViewModel = hiltViewModel()
+    val citiesState = viewModel.citiesState.value
+    LaunchedEffect(Unit) {
+        viewModel.getCities()
+    }
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         content = { padding ->
@@ -37,7 +45,7 @@ fun CitiesScreen(navController: NavController, snackBarHostState: SnackbarHostSt
                 ) {
 
                     Text(
-                        text = "Города:",
+                        text = "Выберите город",
                         fontSize = 32.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
@@ -45,13 +53,19 @@ fun CitiesScreen(navController: NavController, snackBarHostState: SnackbarHostSt
                             .padding(16.dp)
                     )
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
-                        items(cities) { city ->
+                        items(citiesState.citiesList) { city ->
                             Text(
                                 text = city,
                                 fontSize = 18.sp,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { navController.navigate("dates")}
+                                    .clickable {
+                                        navController.navigate(
+                                            Screen.DatesScreen.withArgs(
+                                                city
+                                            )
+                                        ); Log.d("MyTag", city)
+                                    }
                                     .padding(horizontal = 8.dp, vertical = 8.dp),
                                 textAlign = TextAlign.Center
                             )

@@ -70,6 +70,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 import androidx.navigation.NavController
@@ -84,8 +85,11 @@ fun DatesScreen(
     navController: NavController,
     snackBarHostState: SnackbarHostState
 ) {
-    val viewModel: DatesViewModel = viewModel()
+    val viewModel: DatesViewModel = hiltViewModel()
     val datesState = viewModel.datesState.value
+    LaunchedEffect(Unit) {
+
+    }
 
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
