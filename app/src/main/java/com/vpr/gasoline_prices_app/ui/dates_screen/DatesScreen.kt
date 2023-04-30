@@ -1,6 +1,8 @@
 package com.vpr.gasoline_prices_app.ui.dates_screen
 
 import android.annotation.SuppressLint
+import android.icu.text.DateFormatSymbols
+import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.util.Log
 import android.view.ViewGroup
@@ -26,6 +28,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.BottomSheetState
@@ -48,9 +51,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -70,6 +76,7 @@ import androidx.navigation.NavController
 import com.example.gasoline_prices_app.R
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -85,8 +92,19 @@ fun DatesScreen(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
     )
 
+    fun createYearList(): List<String> {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val years = mutableListOf<String>()
+        for (i in 0..10) {
+            years.add((currentYear - 10 + i).toString())
+        }
+        return years
+    }
+
     val coroutineScope = rememberCoroutineScope()
     val selectedMonth = remember { mutableStateOf("") }
+    var selectedYear by remember { mutableStateOf("") }
+    val yearList = createYearList()
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -105,39 +123,51 @@ fun DatesScreen(
                     }
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {
-                    // Горизонтальный список с годами
-                    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                    val years = mutableListOf<String>()
-                    for (i in 0..10) {
-                        years.add((currentYear - 10 + i).toString())
-                    }
                     LazyRow(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                        items(years) { year ->
+                        itemsIndexed(yearList) { index, year ->
                             Text(
                                 text = year,
                                 fontSize = 16.sp,
+                                color = if (selectedYear == year) Color.Red else Color.Black,
                                 modifier = Modifier
                                     .padding(8.dp)
+                                    .clickable {
+                                        selectedYear = year
+                                    }
                             )
                         }
                     }
 
-                    // Текст с названием выбранного месяца
-                    androidx.compose.material.Text(
-                        text = selectedMonth.value,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .align(Alignment.CenterHorizontally)
-                    )
-
                     AndroidView({ CalendarView(it) },
                         Modifier.wrapContentSize(),
                         update = { view ->
-                            view.setOnDateChangeListener { _, year, mon, dom ->
-                               Log.d("Date", "Y=$year M=$mon, D=$dom")
-                                // selectedMonth.value = monthName
+                            val today = Calendar.getInstance()
+                            today.add(Calendar.MONTH, 1)
+                            today.set(Calendar.DAY_OF_MONTH, 1)
+                            today.add(Calendar.DATE, -1)
+
+                            val maxDate = today.timeInMillis
+
+                            view.maxDate = maxDate
+
+                            view.setOnDateChangeListener { _, year, month, day ->
+                                val calendar = Calendar.getInstance().apply {
+                                    set(Calendar.YEAR, year)
+                                    set(Calendar.MONTH, month)
+                                    set(Calendar.DAY_OF_MONTH, day)
+                                }
+                                val monthName = SimpleDateFormat("LLLL", Locale.getDefault()).format(calendar.time)
+                                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+
+                                selectedMonth.value  = monthName
+
+                                selectedYear = year.toString()
+
+                            }
+
+                            if (selectedYear.isNotEmpty()) {
+                                val yearInt = selectedYear.toInt()
+                                view.date = Calendar.getInstance().apply { set(yearInt, 0, 1) }.timeInMillis
                             }
                         }
                     )
@@ -228,6 +258,8 @@ fun DatesScreen(
         }
     }
 }
+
+
 
 
 
