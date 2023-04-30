@@ -52,8 +52,7 @@ class MainActivity : ComponentActivity() {
 
         NavHost(navController = navController, startDestination = "splash") {
             composable("splash") { SplashScreen(navController, snackBarHostState) }
-            composable("cities") {
-                CitiesScreen(navController, snackBarHostState)}
+            composable("cities") { CitiesScreen(navController, snackBarHostState)}
             composable("dates") { DatesScreen(navController, snackBarHostState) }
             composable("prices") { PriceDetailsScreen(navController, snackBarHostState) }
         }

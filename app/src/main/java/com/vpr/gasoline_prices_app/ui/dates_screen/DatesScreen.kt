@@ -1,6 +1,7 @@
 package com.vpr.gasoline_prices_app.ui.dates_screen
 
 import android.annotation.SuppressLint
+import android.icu.util.Calendar
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.CalendarView
@@ -51,9 +52,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.Calendar
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -74,7 +75,7 @@ import com.maxkeppeler.sheets.calendar.models.CalendarStyle
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun DatesScreen(
     navController: NavController,
@@ -85,6 +86,7 @@ fun DatesScreen(
     )
 
     val coroutineScope = rememberCoroutineScope()
+    val selectedMonth = remember { mutableStateOf("") }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -104,7 +106,11 @@ fun DatesScreen(
             ) {
                 Column(modifier = Modifier.padding(8.dp)) {
                     // Горизонтальный список с годами
-                    val years = listOf("2019", "2020", "2021", "2022", "2023")
+                    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+                    val years = mutableListOf<String>()
+                    for (i in 0..10) {
+                        years.add((currentYear - 10 + i).toString())
+                    }
                     LazyRow(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                         items(years) { year ->
                             Text(
@@ -118,7 +124,7 @@ fun DatesScreen(
 
                     // Текст с названием выбранного месяца
                     androidx.compose.material.Text(
-                        text = "Название выбранного месяца",
+                        text = selectedMonth.value,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -130,7 +136,8 @@ fun DatesScreen(
                         Modifier.wrapContentSize(),
                         update = { view ->
                             view.setOnDateChangeListener { _, year, mon, dom ->
-                                // do something with the new date
+                               Log.d("Date", "Y=$year M=$mon, D=$dom")
+                                // selectedMonth.value = monthName
                             }
                         }
                     )
@@ -144,7 +151,7 @@ fun DatesScreen(
                             .padding(8.dp)
                             .fillMaxWidth()
                     ) {
-                        Text(text = "Выбрать дату")
+                        Text(text = "Подтвердить выбор даты")
                     }
                 }
             }
