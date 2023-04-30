@@ -1,23 +1,41 @@
 package com.vpr.gasoline_prices_app.ui.dates_screen
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.view.ViewGroup
+import android.widget.CalendarView
+import android.widget.DatePicker
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,109 +47,185 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.Calendar
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+
+import androidx.navigation.NavController
 import com.example.gasoline_prices_app.R
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.calendar.models.CalendarStyle
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun PricesScreen(snackBarHostState: SnackbarHostState) {
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackBarHostState) },
-        topBar = {
-            androidx.compose.material.TopAppBar(
+fun DatesScreen(
+    navController: NavController,
+    snackBarHostState: SnackbarHostState
+) {
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                content = {
-                    Row(
+                    .fillMaxWidth()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            coroutineScope.launch {
+                                if (!bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                                }
+                            }
+                        })
+                    }
+            ) {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    // Горизонтальный список с годами
+                    val years = listOf("2019", "2020", "2021", "2022", "2023")
+                    LazyRow(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                        items(years) { year ->
+                            Text(
+                                text = year,
+                                fontSize = 16.sp,
+                                modifier = Modifier
+                                    .padding(8.dp)
+                            )
+                        }
+                    }
+
+                    // Текст с названием выбранного месяца
+                    androidx.compose.material.Text(
+                        text = "Название выбранного месяца",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
-                            .fillMaxSize(),
-                        horizontalArrangement = Arrangement.Center
+                            .padding(8.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+
+                    AndroidView({ CalendarView(it) },
+                        Modifier.wrapContentSize(),
+                        update = { view ->
+                            view.setOnDateChangeListener { _, year, mon, dom ->
+                                // do something with the new date
+                            }
+                        }
+                    )
+
+                    // Кнопка "Выбрать дату"
+                    Button(
+                        onClick = {
+                            // Обработка нажатия на кнопку
+                        },
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Период",
-                            modifier = Modifier
-                                .height(56.dp)
-                                .padding(16.dp)
-                        )
-                    }
-                }
-            )
-        },
-     content = { padding ->
-         Surface(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column() {
-                        Icon(
-                            painter = painterResource(id = R.drawable.calendar),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clickable(onClick = { /* Handle calendar icon click */ })
-                                .align(Alignment.CenterHorizontally)
-                        )
-
-                        Text(
-                            text = "12.12.2005"
-                        )
-                    }
-
-                    Column() {
-                        Icon(
-                            painter = painterResource(id = R.drawable.calendar),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .clickable(onClick = { /* Handle calendar icon click */ })
-                                .align(Alignment.CenterHorizontally)
-                        )
-                        Text(
-                            text = "25.05.2023"
-                        )
-                    }
-                }
-                LazyColumn(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize(),
-
-                    ) {
-                    items(30) { index ->
-                        Text(
-                            text = "Дата $index",
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(8.dp)
-                        )
+                        Text(text = "Выбрать дату")
                     }
                 }
             }
+        },
+        sheetPeekHeight = 0.dp
+    ) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column() {
+                    Icon(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable(onClick = {
+                                coroutineScope.launch {
+                                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                        bottomSheetScaffoldState.bottomSheetState.expand()
+                                    } else {
+                                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                                    }
+                                }
+                            })
+                            .align(Alignment.CenterHorizontally)
+                    )
+
+                    Text(
+                        text = "12.12.2005"
+                    )
+                }
+
+                Column() {
+                    Icon(
+                        painter = painterResource(id = R.drawable.calendar),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clickable(onClick = {
+                                coroutineScope.launch {
+                                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                                        bottomSheetScaffoldState.bottomSheetState.expand()
+                                    } else {
+                                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                                    }
+                                }
+                            })
+                            .align(Alignment.CenterHorizontally)
+                    )
+                    Text(
+                        text = "25.05.2023"
+                    )
+                }
+            }
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize(),
+            ) {
+                items(30) { index ->
+                    Text(
+                        text = "Дата $index",
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .clickable {
+                                navController.navigate("prices")
+                            }
+                            .padding(8.dp)
+                    )
+                }
+            }
         }
-    })
+    }
 }
+
+
 
 
 @Preview
 @Composable
 fun PreviewPricesScreen() {
-    val snackBarHostState = remember { SnackbarHostState() }
-    PricesScreen(snackBarHostState)
 }

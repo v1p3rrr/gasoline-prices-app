@@ -17,11 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PriceDetailsScreen(snackBarHostState: SnackbarHostState) {
+fun PriceDetailsScreen(navController: NavController, snackBarHostState: SnackbarHostState) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         content = { padding ->
@@ -113,6 +114,6 @@ fun PriceDetailsScreen(snackBarHostState: SnackbarHostState) {
 @Preview
 @Composable
 fun PreviewPriceDetailsScreen() {
-    val snackBarHostState = remember { SnackbarHostState() }
-    PriceDetailsScreen(snackBarHostState)
+    //val snackBarHostState = remember { SnackbarHostState() }
+    //PriceDetailsScreen(snackBarHostState)
 }

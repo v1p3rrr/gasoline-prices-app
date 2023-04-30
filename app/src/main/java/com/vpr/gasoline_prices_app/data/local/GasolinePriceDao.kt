@@ -28,7 +28,7 @@ interface GasolinePriceDao {
     suspend fun deleteGasolinePriceByCityAndDate(city: String, date: String)
 
     @Query("DELETE FROM gasoline_price WHERE city = :city AND date(date) BETWEEN date(:dateStart) AND date(:dateEnd)")
-    suspend fun deleteGasolinePricesByCityAndDateRange(city: String, dateStart: String, dateEnd: String): List<GasolinePriceEntity>
+    suspend fun deleteGasolinePricesByCityAndDateRange(city: String, dateStart: String, dateEnd: String)
 
 
     @Update
