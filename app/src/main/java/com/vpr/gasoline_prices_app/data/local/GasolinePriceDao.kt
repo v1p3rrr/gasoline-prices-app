@@ -12,8 +12,8 @@ interface GasolinePriceDao {
     @Query("SELECT * FROM gasoline_price WHERE city = :city")
     suspend fun getGasolinePricesByCity(city: String): List<GasolinePriceEntity> //todo add in repository
 
-    @Query("SELECT * FROM gasoline_price WHERE city = :city AND date = :date")
-    suspend fun getGasolinePriceByCityAndDate(city: String, date: String): List<GasolinePriceEntity>
+    @Query("SELECT * FROM gasoline_price WHERE city = :city AND date = :date LIMIT 1")
+    suspend fun getGasolinePriceByCityAndDate(city: String, date: String): GasolinePriceEntity?
 
     @Query("SELECT * FROM gasoline_price WHERE city = :city AND date(date) BETWEEN date(:dateStart) AND date(:dateEnd)")
     suspend fun getGasolinePricesByCityAndDateRange(city: String, dateStart: String, dateEnd: String): List<GasolinePriceEntity>
