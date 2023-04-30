@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.flow
 
 
 interface GasolinePriceRepository {
-    suspend fun getGasolinePriceByCityAndDate(city: String, date: String) : Flow<Resource<GasolinePrice>>
+    suspend fun getGasolinePriceByCityAndDate(city: String, date: String) : Flow<Resource<List<GasolinePrice>>>
 
     suspend fun getGasolinePricesListByCityAndDateRange(city: String, dateStart: String, dateEnd: String): Flow<Resource<List<GasolinePrice>>>
 
