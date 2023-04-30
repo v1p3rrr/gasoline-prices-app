@@ -2,7 +2,6 @@ package com.vpr.gasoline_prices_app.data.remote
 
 import com.vpr.gasoline_prices_app.data.remote.dto.CityWithPriceListDTO
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface GasolinePricesService {
@@ -15,16 +14,16 @@ interface GasolinePricesService {
         @Query("city") city: String
     ): CityWithPriceListDTO
 
-    @GET("./price/{city}/date/{date}")
+    @GET("./price")
     suspend fun getPriceByCityAndDate(
-        @Path("city") city: String,
-        @Path("date") date: String
+        @Query("city") city: String,
+        @Query("date") date: String
     ): CityWithPriceListDTO
 
-    @GET("./price/{city}/date-range/{dateStart}/{dateEnd}")
+    @GET("./price")
     suspend fun getPricesListByCityAndDateRange(
-        @Path("city") city: String,
-        @Path("dateStart") dateStart: String,
-        @Path("dateEnd") dateEnd: String
+        @Query("city") city: String,
+        @Query("dateStart") dateStart: String,
+        @Query("dateEnd") dateEnd: String
     ): CityWithPriceListDTO
 }

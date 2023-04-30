@@ -12,20 +12,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PriceDetailsScreen(navController: NavController, snackBarHostState: SnackbarHostState) {
-    val viewModel: PriceDetailsViewModel = viewModel()
-    val priceDetailsState = viewModel.priceDetailsState.value
-
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         content = { padding ->
@@ -33,30 +30,28 @@ fun PriceDetailsScreen(navController: NavController, snackBarHostState: Snackbar
             Column() {
                 Row(Modifier.fillMaxWidth().padding(vertical = 16.dp)) {
                     Text(modifier = Modifier.width(120.dp).padding(start = 16.dp), text = "")
-                        Text(
-                            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
-                            textAlign = TextAlign.Center,
-                            text = priceDetailsState.gasolinePriceListChosen[0].date
-                        )
-                        Text(
-                            modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
-                            textAlign = TextAlign.Center,
-                            text = priceDetailsState.gasolinePriceListToday[0].date
-                        )
-                    }
+                    Text(
+                        modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                        textAlign = TextAlign.Center,
+                        text = "15.07.2021"
+                    )
+                    Text(
+                        modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                        textAlign = TextAlign.Center,
+                        text = "15.12.2021"
+                    )
                 }
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
                     Text(modifier = Modifier.width(120.dp).padding(start = 16.dp), text = "А-92")
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListChosen.find { it.gasolineType == "92" }?.price?.toString() ?: "—"
+                        text = "10.00 руб."
                     )
-                    val a = priceDetailsState.gasolinePriceListChosen.find { it.gasolineType == "92" }?.price
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListToday.find { it.gasolineType == "92" }?.price?.toString() ?: "—"
+                        text = "10.50 руб."
                     )
                 }
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
@@ -64,12 +59,12 @@ fun PriceDetailsScreen(navController: NavController, snackBarHostState: Snackbar
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListChosen.find { it.gasolineType == "95" }?.price?.toString() ?: "—"
+                        text = "11.00 руб."
                     )
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListToday.find { it.gasolineType == "95" }?.price?.toString() ?: "—"
+                        text = "11.50 руб."
                     )
                 }
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
@@ -77,12 +72,25 @@ fun PriceDetailsScreen(navController: NavController, snackBarHostState: Snackbar
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListChosen.find { it.gasolineType == "98" }?.price?.toString() ?: "—"
+                        text = "10.00 руб."
                     )
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListToday.find { it.gasolineType == "98" }?.price?.toString() ?: "—"
+                        text = "10.50 руб."
+                    )
+                }
+                Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Text(modifier = Modifier.width(120.dp).padding(start = 16.dp), text = "А-100")
+                    Text(
+                        modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                        textAlign = TextAlign.Center,
+                        text = "10.00 руб."
+                    )
+                    Text(
+                        modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                        textAlign = TextAlign.Center,
+                        text = "10.50 руб."
                     )
                 }
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
@@ -90,17 +98,17 @@ fun PriceDetailsScreen(navController: NavController, snackBarHostState: Snackbar
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListChosen.find { it.gasolineType == "diesel" }?.price?.toString() ?: "—"
+                        text = "10.00 руб."
                     )
                     Text(
                         modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
                         textAlign = TextAlign.Center,
-                        text = priceDetailsState.gasolinePriceListToday.find { it.gasolineType == "diesel" }?.price?.toString() ?: "—"
+                        text = "10.50 руб."
                     )
                 }
             }
         }
-    )
+    })
 }
 
 @Preview
